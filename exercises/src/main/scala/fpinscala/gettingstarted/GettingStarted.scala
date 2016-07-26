@@ -36,7 +36,12 @@ object MyModule {
 
   // Exercise 1: Write a function to compute the nth fibonacci number
 
-  def fib(n: Int): Int = ???
+  def fib(n: Int): Int = {
+    def go(n1: Int, n2: Int, count: Int): Int =
+      if (count == n) n1
+      else go(n2, n1+n2, count + 1)
+    go(0, 1, 0)
+  }
 
   // This definition and `formatAbs` are very similar..
   private def formatFactorial(n: Int) = {
@@ -120,7 +125,7 @@ object MonomorphicBinarySearch {
 
 object PolymorphicFunctions {
 
-  // Here's a polymorphic version of `binarySearch`, parameterized on
+  // Here's a polymorphic version of `binarySearch`, parametrized on
   // a function for testing whether an `A` is greater than another `A`.
   def binarySearch[A](as: Array[A], key: A, gt: (A,A) => Boolean): Int = {
     @annotation.tailrec
@@ -140,7 +145,10 @@ object PolymorphicFunctions {
 
   // Exercise 2: Implement a polymorphic function to check whether
   // an `Array[A]` is sorted
-  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = ???
+  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = {
+    def go(n: Int): Boolean = (n >= as.length) || gt(as(n), as(n-1)) && go(n+1)
+    go(1)
+  }
 
   // Polymorphic functions are often so constrained by their type
   // that they only have one implementation! Here's an example:
