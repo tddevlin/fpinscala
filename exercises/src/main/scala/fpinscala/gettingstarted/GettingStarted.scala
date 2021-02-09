@@ -37,10 +37,11 @@ object MyModule {
   // Exercise 1: Write a function to compute the nth fibonacci number
 
   def fib(n: Int): Int = {
-    def go(n1: Int, n2: Int, count: Int): Int =
-      if (count == n) n1
-      else go(n2, n1+n2, count + 1)
-    go(0, 1, 0)
+    @scala.annotation.tailrec
+    def loop(current: Int, next: Int, count: Int): Int =
+      if (count == n) current
+      else loop(next, current + next, count + 1)
+    loop(0, 1, 0)
   }
 
   // This definition and `formatAbs` are very similar..
@@ -146,8 +147,9 @@ object PolymorphicFunctions {
   // Exercise 2: Implement a polymorphic function to check whether
   // an `Array[A]` is sorted
   def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = {
-    def go(n: Int): Boolean = (n >= as.length) || gt(as(n), as(n-1)) && go(n+1)
-    go(1)
+    @scala.annotation.tailrec
+    def loop(n: Int): Boolean = (n >= as.length) || (gt(as(n), as(n-1)) && loop(n+1))
+    loop(1)
   }
 
   // Polymorphic functions are often so constrained by their type
@@ -160,14 +162,14 @@ object PolymorphicFunctions {
 
   // Note that `=>` associates to the right, so we could
   // write the return type as `A => B => C`
-  def curry[A,B,C](f: (A, B) => C): A => (B => C) =
-    ???
+  def curry[A,B,C](f: (A, B) => C): A => B => C =
+    a => b => f(a, b)
 
   // NB: The `Function2` trait has a `curried` method already
 
   // Exercise 4: Implement `uncurry`
   def uncurry[A,B,C](f: A => B => C): (A, B) => C =
-    ???
+    (a, b) => f(a)(b)
 
   /*
   NB: There is a method on the `Function` object in the standard library,
@@ -182,5 +184,5 @@ object PolymorphicFunctions {
   // Exercise 5: Implement `compose`
 
   def compose[A,B,C](f: B => C, g: A => B): A => C =
-    ???
+    a => f(g(a))
 }
