@@ -171,6 +171,5 @@ object List { // `List` companion object. Contains functions for creating and wo
     println(hasSubsequence(l, l3))
     println(hasSubsequence(l, l4))
     println(!hasSubsequence(l, l5))
-
   }
 }
